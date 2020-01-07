@@ -21,3 +21,4 @@ def build_image_encoder(image_size):
     models = [build_one(int(image_size * scale)) for scale in config.image_scaling]
     def forward(inputs):
         return [model(ni) for ni in inputs]
+    return forward
