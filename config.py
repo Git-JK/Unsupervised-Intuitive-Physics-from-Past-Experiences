@@ -3,6 +3,7 @@
 
 cnt_epoch = 128
 learning_rate = 0.001
+kl_weight = 0.005  # https://github.com/yzwxx/vae-celebA/blob/master/train_vae.py#L99
 
 ## 网络设置
 
