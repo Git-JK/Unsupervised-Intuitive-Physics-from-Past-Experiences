@@ -1,7 +1,27 @@
 import tensorflow as tf
 from tensorlayer.layers import *
 import tensorlayer as tl
+import numpy as np
 import config
+
+def gaussian_sampler(mean, log_var):
+    outputs = []
+    length = len(mean)
+    for i in range(length):
+        outputs.append(np.random.normal(mean[i], exp(log_var[i])))
+    return outputs
+
+def conv_cross2d(inputs, weights):
+    outputs = []
+    for input, weight in zip(inputs, weights):
+        output = Conv2d(
+            n_filter = weight[0] * weight[1],
+            filter_size = (weight[2], weight[3]),
+            padding = 'SAME'
+        )(input)
+        outputs.append(output)
+    outputs = tf.concat(outputs, 0)
+    return outputs
 
 class image_encoder:
     def __init__(self, image_size):
@@ -120,3 +140,48 @@ class motion_decoder:
             inputs = tf.concat(inputs, 1)
             outputs = self.models(inputs)
             return outputs
+
+class VDNet:
+    def __init__(self):
+        self.scales = config.image_scaling
+        self.image_encoder = image_encoder()
+        self.motion_encoder = motion_encoder()
+        self.kernel_decoder = kernel_decoder()
+        self.motion_decoder = motion_decoder()
+
+    def forward(self, inputs, mean = None, log_var = None, z = None, returns = None)
+        if isinstance(inputs, list) and len(inputs) == 2:
+            i_inputs, m_inputs = inputs
+        else:
+            i_inputs, m_inputs = inputs, None
+        
+        #image encoder
+        features = self.image_encoder.forward(i_inputs)
+
+        #motion encoder
+        if mean is None and log_var is None and z is None:
+            mean, log_var = self.motion_encoder.forward(m_inputs)
+
+        #guassian sampler
+        if z is None:
+            z = gaussian_sampler(mean, log_var)
+        
+        #kernel decoder
+
+        kernels = self.kernel_decoder.forward(z)
+
+        #cross convolution
+        for i, feature in enumerate(features):
+            kernel = kernels[: i, ...]
+            features[i] = conv_cross2d(feature, kernel)
+        
+        #motion decoder
+        outputs = self.motion_decoder.forward(features)
+
+        #returns
+        if returns is Not None:
+            if not isinstance(returns, (list, tuple)):
+                returns = [returns]
+            for i, k in enumerate(returns):
+                returns[i] = locals()[k]
+            return outputs, returns[0] if len(returns) == 1 else returns
