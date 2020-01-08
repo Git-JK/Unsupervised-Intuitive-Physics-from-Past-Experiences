@@ -1,3 +1,5 @@
+# 初代network.py代码 后面将会把其中部分拆分，修复其中tf和tl混用(?)的一些bug。
+
 import tensorflow as tf
 from tensorlayer.layers import *
 import tensorlayer as tl
@@ -11,6 +13,8 @@ def gaussian_sampler(mean, log_var):
         outputs.append(np.random.normal(mean[i], exp(log_var[i])))
     return outputs
 
+# WARNING: BUGGY
+# 注意用tf.nn.conv2d重写交叉卷积
 def conv_cross2d(inputs, weights):
     outputs = []
     for input, weight in zip(inputs, weights):
@@ -56,9 +60,9 @@ class motion_encoder:
                 nn = Conv2d(n_filter = param, filter_size = (5, 5))(nn)
             else:
                 nn = PoolLayer(filter_size = (1, param, param, 1),
-                            strides = (1, param, param, 1),
-                            padding = 'SAME',
-                            pool = tf.nn.max_pool)(nn)
+                               strides = (1, param, param, 1),
+                               padding = 'SAME',
+                               pool = tf.nn.max_pool)(nn)
         no = nn
         return tl.models.Model(inputs = ni, outputs = no)
 
@@ -79,7 +83,10 @@ class kernel_decoder:
         self.num_groups = config.kernel_decoder[4]
         self.num_layers = config.kernel_decoder[5]
         self.kernel_sizes = config.kernel_decoder[6]
+        # TODO：看懂这个公式是什么意思——这对理解kernel decoder的结构很重要。
         self.num_channels = self.num_scales * self.out_channels * (self.in_channels // self.num_groups)
+
+        # WARNING 这里把tf和tl.layers混起来用，预期有问题，后面改改。
         self.layers = tf.keras.models.Sequential()
         self.layers.add(build_deconv2d(int(image_size)))
         self.layers.add(build_conv2d(int(image_size)))
@@ -179,7 +186,7 @@ class VDNet:
         outputs = self.motion_decoder.forward(features)
 
         #returns
-        if returns is Not None:
+        if returns is not None:
             if not isinstance(returns, (list, tuple)):
                 returns = [returns]
             for i, k in enumerate(returns):

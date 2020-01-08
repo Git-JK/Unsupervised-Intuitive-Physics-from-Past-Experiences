@@ -1,8 +1,9 @@
 from PIL import Image
 import numpy as np
 import os
+import config
 
-def read_from_path( path ):
+def read_from_path(path):
     #path = "./exercise_dataset/release_data_set/images"
     filenames = os.listdir(path)
     im_before = None
@@ -27,6 +28,6 @@ def read_from_path( path ):
                 fp.close()       
     return np.array(im_before),np.array(im_after)
     
-return1,return2 = read_from_path("xxx")
-print(return1.shape)
-print(return2.shape)
+data_before, data_after = read_from_path(config.data_dir)
+print(data_before.shape)
+print(data_after.shape)

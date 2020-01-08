@@ -1,4 +1,8 @@
 
+## 数据目录设置
+
+data_dir = 'data/exercise'
+
 ## 训练设置
 
 cnt_epoch = 128
@@ -31,6 +35,15 @@ motion_encoder_cnn = [('conv', 96), ('maxpool', 4),
                       ('conv', 256), ('maxpool', 2)]
 
 kernel_decoder = [4, 32, 32, 32, 5, 3, 5]
+kernel_decoder_spec = {
+    'num_scales': 4,
+    'in_channels': 32,
+    'out_channels': 32,
+    'kernel_size': 32,
+    'num_groups': 5,
+    'num_layers': 3,
+    'kernel_sizes': 5
+}
 
 kernel_decoder_decnn = [('deconv', 128), ('maxpool', 5),
                         ('deconv', 128), ('maxpool', 5)]

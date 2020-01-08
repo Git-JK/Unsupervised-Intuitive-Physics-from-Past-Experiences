@@ -1,4 +1,4 @@
-from train_data import train_data, test_data, revert_preprocess
+from data import train_data, test_data, revert_preprocess
 from model import model_train, model_test
 import config
 import os
