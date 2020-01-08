@@ -100,7 +100,7 @@ class kernel_decoder:
         return outputs
     
     
-    class motion_decoder:
+class motion_decoder:
     def __init__(self, image_size):
         self.scales = config.image_scaling
         self.models = []
@@ -116,7 +116,7 @@ class kernel_decoder:
             scale_factor = int(self.scales[-1] / self.scales[k])
             if scale_factor != 1:
                 inputs[k] = tf.compat.v1.image.resize_nearest_neighbor(input, scale_factor)
-            
+
             inputs = tf.concat(inputs, 1)
             outputs = self.models(inputs)
             return outputs
