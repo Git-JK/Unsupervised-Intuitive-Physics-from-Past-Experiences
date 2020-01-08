@@ -1,4 +1,5 @@
 import tensorflow as tf
+from tensorlayer.layers import *
 import tensorlayer as tl
 import config
 
@@ -97,4 +98,25 @@ class kernel_decoder:
         outputs = self.layers(inputs)
         outputs = tf.reshape(inputs, [-1, self.num_scales, self.out_channels, self.in_channels // self.num_groups, self.kernel_size, self.kernel_size])
         return outputs
-     
+    
+    
+    class motion_decoder:
+    def __init__(self, image_size):
+        self.scales = config.image_scaling
+        self.models = []
+        self.models.append([buid_one(int(image_size * scale)) for scale in config.image_scaling])
+    def build_one(input_size):
+        ni = Input((None, input_size, input_size, 3))
+        nn = ni
+        nn = Conv2d(n_filter = 128, filter_size = (9, 9))(nn)
+        no = nn
+        return tl.models.Model(inputs = ni, outputs = no)
+    def forward(self, inputs):
+        for k, input in enumerate(inputs)
+            scale_factor = int(self.scales[-1] / self.scales[k])
+            if scale_factor != 1:
+                inputs[k] = tf.compat.v1.image.resize_nearest_neighbor(input, scale_factor)
+            
+            inputs = tf.concat(inputs, 1)
+            outputs = self.models(inputs)
+            return outputs
