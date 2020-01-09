@@ -28,6 +28,9 @@ def read_im(path, filelist):
     return im_before, im_after
 
 imlist_train = read_imlist_from_file(config.data_train_list)
+imlist_visualize = read_imlist_from_file(config.data_visualize_list)
+
+im_visualize_before, im_visualize_after = read_im(config.data_dir, imlist_visualize)
 
 def enum_train():
     for imlist in tl.iterate.minibatches(imlist_train, imlist_train, config.batch_size,

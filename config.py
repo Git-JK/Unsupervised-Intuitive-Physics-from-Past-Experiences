@@ -3,6 +3,7 @@
 
 data_dir = 'data/shape/3Shapes2_large'
 data_train_list = 'data/shape/3Shapes2_large/train.txt'
+data_visualize_list = 'data/shape/3Shapes2_large/visualize.txt'
 
 ## 训练设置
 
