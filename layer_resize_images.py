@@ -5,7 +5,7 @@ from tensorlayer.layers import *
 
 # 为啥不用Upsampling2d和Downsampling2d，因为只关心放缩后多大，写着方便一些。
 class ResizeImages(Layer):
-    def __init__(self, sz):
+    def __init__(self, sz, name = None):
         super(ResizeImages, self).__init__(name)
         self.sz = sz
         logging.info('ResizeImages %s' % self.name)
@@ -19,4 +19,4 @@ class ResizeImages(Layer):
         s = '{classname}(sz={sz})'.format(classname=self.__class__.__name__, **self.__dict__)
     
     def forward(self, inputs):
-        return tf.image.resize_images(inputs, [self.sz, self.sz])
+        return tf.image.resize(inputs, [self.sz, self.sz])

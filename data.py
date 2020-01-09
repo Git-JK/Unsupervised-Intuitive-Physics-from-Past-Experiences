@@ -20,15 +20,16 @@ def revert_preprocess(x):
 
 def read_im(path, filelist):
     im_before = tl.visualize.read_images([f + '_im1.png' for f in filelist], path)
-    im_before = np.stack(im_before, 0)
+    im_before = np.stack(im_before, 0).astype(np.float32)
     im_before = preprocess(im_before)
     im_after = tl.visualize.read_images([f + '_im2.png' for f in filelist], path)
-    im_after = np.stack(im_after, 0)
+    im_after = np.stack(im_after, 0).astype(np.float32)
     im_after = preprocess(im_after)
     return im_before, im_after
 
-imlist_train = read_imlist_from_file(config.data_train_list)[:10]
+imlist_train = read_imlist_from_file(config.data_train_list)
 
 def enum_train():
-    for imlist in tl.iterate.minibatches(imlist_train, imlist_train, config.batch_size, shuffle = True):
-        yield read_im(config.data_dir, imlist)
+    for imlist in tl.iterate.minibatches(imlist_train, imlist_train, config.batch_size,
+                                         allow_dynamic_batch_size = True, shuffle = True):
+        yield read_im(config.data_dir, imlist[0])

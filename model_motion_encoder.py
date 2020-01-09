@@ -16,5 +16,6 @@ def build_motion_encoder():
     nn = Conv2d(256, (5, 5), (1, 1), tf.nn.relu, 'VALID')(nn)
     nn = BatchNorm2d()(nn)
     nn = Conv2d(256, (5, 5), (1, 1), None, 'VALID')(nn)
+    nn = Reshape((-1, 6400))(nn)
     mean, log_var = Split(2, 1)(nn)
     return tl.models.Model(inputs = ni, outputs = [mean, log_var])

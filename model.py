@@ -19,8 +19,8 @@ def build():
         z = Input((None, 3200))
         features = image_encoder(im)
         kernels = kernel_decoder(z)
-        features = [CrossConv()(feature, kernel) for feature, kernel in zip(features, kernels)]
-        output = motion_decoder(*features)
+        features = [CrossConv()([feature, kernel]) for feature, kernel in zip(features, kernels)]
+        output = motion_decoder(features)
         return tl.models.Model(inputs = [im, z], outputs = output)
 
     model_eval = build_eval()
@@ -32,8 +32,9 @@ def build():
         im = Concat(3)([im_before, im_after])
         z0 = Input((None, 3200))
         mean, log_var = motion_encoder(im)
-        z = Lambda(lambda z0, mean, log_var: mean + z0 * tf.exp(log_var))(z0, mean, log_var)
-        output = model_eval.as_layer()(im_before, z)
+        # z <- mean + z0 * exp(log_var)
+        z = Lambda(lambda pack: pack[1] + pack[0] * tf.exp(pack[2]))([z0, mean, log_var])
+        output = model_eval.as_layer()([im_before, z])
         return tl.models.Model(inputs = [im_before, im_after, z0],
                                outputs = [mean, log_var, output])
 

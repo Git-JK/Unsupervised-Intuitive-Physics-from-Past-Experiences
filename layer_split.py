@@ -4,7 +4,7 @@ from tensorlayer import logging
 from tensorlayer.layers import *
 
 class Split(Layer):
-    def __init__(self, num_or_size_splits, axis = 0):
+    def __init__(self, num_or_size_splits, axis = 0, name = None):
         super(Split, self).__init__(name)
         self.num_or_size_splits = num_or_size_splits
         self.axis = axis

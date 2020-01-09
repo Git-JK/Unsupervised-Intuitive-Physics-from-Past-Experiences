@@ -11,7 +11,7 @@ def build_one_image_encoder(size):
     nn = BatchNorm2d()(nn)
     nn = Conv2d(64, (5, 5), (2, 2), tf.nn.relu)(nn)
     nn = BatchNorm2d()(nn)
-    nn = Conv2d(64, (5, 5), (1, 1))(nn)
+    nn = Conv2d(32, (5, 5), (1, 1))(nn)
     return tl.models.Model(inputs = ni, outputs = nn)
 
 # 四种不同的scale
