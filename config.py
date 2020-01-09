@@ -1,7 +1,8 @@
 
 ## 数据目录设置
 
-data_dir = 'data/exercise'
+data_dir = 'data/shape/3Shapes2_large'
+data_train_list = 'data/shape/3Shapes2_large/train.txt'
 
 ## 训练设置
 
