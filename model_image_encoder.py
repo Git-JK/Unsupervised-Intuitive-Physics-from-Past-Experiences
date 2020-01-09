@@ -1,24 +1,25 @@
 import tensorlayer as tl
 from tensorlayer.layers import *
 import tensorflow as tf
-import config
+from layer_resize_images import ResizeImages
 
-def build_one(input_size):
-    ni = Input((None, input_size, input_size, 3))
-    nn = ni
-    for layer_type, param in config.image_encoder_cnn:
-        if layer_type == 'conv':
-            nn = Conv2d(n_filter = param, filter_size = (5, 5))(nn)
-        else:
-            nn = PoolLayer(filter_size = (1, param, param, 1),
-                           strides = (1, param, param, 1),
-                           padding = 'SAME',
-                           pool = tf.nn.max_pool)(nn)
-    no = nn
+def build_one_image_encoder(size):
+    ni = Input((None, size, size, 3))
+    nn = Conv2d(64, (5, 5), (2, 2), tf.nn.relu)(ni)
+    nn = BatchNorm2d()(nn)
+    nn = Conv2d(64, (5, 5), (1, 1), tf.nn.relu)(nn)
+    nn = BatchNorm2d()(nn)
+    nn = Conv2d(64, (5, 5), (2, 2), tf.nn.relu)(nn)
+    nn = BatchNorm2d()(nn)
+    nn = Conv2d(64, (5, 5), (1, 1))(nn)
+    return tl.models.Model(inputs = ni, outputs = nn)
+
+# 四种不同的scale
+scaling_factors = [2.0, 1.0, 0.5, 0.25]
+
+def build_image_encoder():
+    ni = Input((None, 128, 128, 3))
+    scaled = [ResizeImages(int(128 * c))(ni) for c in scaling_factors]
+    layers = [build_one_image_encoder(int(128 * c)).as_layer() for c in scaling_factors]
+    no = [layer(im) for layer, im in zip(layers, scaled)]
     return tl.models.Model(inputs = ni, outputs = no)
-
-def build_image_encoder(image_size):
-    models = [build_one(int(image_size * scale)) for scale in config.image_scaling]
-    def forward(inputs):
-        return [model(ni) for ni in inputs]
-    return forward
