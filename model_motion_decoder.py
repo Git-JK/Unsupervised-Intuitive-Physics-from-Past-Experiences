@@ -8,8 +8,6 @@ def build_motion_decoder():
     scaled = [ResizeImages(128)(x) for x in ni]
     x = Concat(3)(scaled)
     nn = Conv2d(128, (9, 9), (1, 1), tf.nn.relu)(x)
-    nn = BatchNorm2d()(nn)
     nn = Conv2d(128, (1, 1), (1, 1), tf.nn.relu)(nn)
-    nn = BatchNorm2d()(nn)
     nn = Conv2d(3, (1, 1), (1, 1))(nn)
     return tl.models.Model(inputs = ni, outputs = nn)
