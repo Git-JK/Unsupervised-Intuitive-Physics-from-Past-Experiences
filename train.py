@@ -37,7 +37,7 @@ for epoch in range(config.cnt_epoch):
             mean, logstdev, outputs = model_train([data_before, data_after, z0])
             loss_kl_t = kl_loss(mean, logstdev)
             loss_l2_t = l2_loss(outputs, data_after - data_before)
-            loss_t = config.kl_weight * loss_kl + loss_l2
+            loss_t = config.kl_weight * loss_kl_t + loss_l2_t
         grad = tape.gradient(loss_t, model_train.trainable_weights)
         optimizer.apply_gradients(zip(grad, model_train.trainable_weights))
 
@@ -58,7 +58,7 @@ for epoch in range(config.cnt_epoch):
         mean, logstdev, outputs = model_train([data_before, data_after, z0])
         loss_kl_t = kl_loss(mean, logstdev)
         loss_l2_t = l2_loss(outputs, data_after - data_before)
-        loss_t = config.kl_weight * loss_kl + loss_l2
+        loss_t = config.kl_weight * loss_kl_t + loss_l2_t
         loss_kl += loss_kl_t * data_before.shape[0] / len_test
         loss_l2 += loss_l2_t * data_before.shape[0] / len_test
         loss += loss_t * data_before.shape[0] / len_test
