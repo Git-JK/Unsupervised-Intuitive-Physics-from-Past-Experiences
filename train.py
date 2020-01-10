@@ -57,9 +57,9 @@ for epoch in range(config.cnt_epoch):
         loss_kl_t = kl_loss(mean, logstdev)
         loss_l2_t = l2_loss(outputs, data_after - data_before)
         loss_t = config.kl_weight * loss_kl + loss_l2
-        loss_kl += loss_kl_t * loss_kl_t.shape[0] / len_test
-        loss_l2 += loss_l2_t * loss_kl_t.shape[0] / len_test
-        loss += loss_t * loss_kl_t.shape[0] / len_test
+        loss_kl += loss_kl_t * data_before.shape[0] / len_test
+        loss_l2 += loss_l2_t * data_before.shape[0] / len_test
+        loss += loss_t * data_before.shape[0] / len_test
     with writer.as_default():
         tf.summary.scalar('test_loss_kl', loss_kl)
         tf.summary.scalar('test_loss_l2', loss_l2)
