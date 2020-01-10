@@ -32,6 +32,7 @@ imlist_train = read_imlist_from_file(config.data_train_list)
 imlist_test = read_imlist_from_file(config.data_test_list)
 imlist_visualize = read_imlist_from_file(config.data_visualize_list)
 
+len_train = len(imlist_train)
 len_test = len(imlist_test)
 
 im_visualize_before, im_visualize_after = read_im(config.data_dir, imlist_visualize)

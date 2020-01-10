@@ -2,7 +2,7 @@ from data import (enum_train_with_progress,
                   revert_preprocess,
                   im_visualize_before, im_visualize_after,
                   enum_test_with_progress,
-                  len_test)
+                  len_train, len_test)
 from model import build
 import config
 import os
@@ -24,30 +24,32 @@ tl.files.exists_or_mkdir(config.save_snapshot_to)
 tl.files.exists_or_mkdir(config.save_visualization_to)
 
 writer = tf.summary.create_file_writer(config.save_logs_to)
-writer_step = 0
-tf.summary.experimental.set_step(writer_step)
 
 for epoch in range(config.cnt_epoch):
     print('Epoch %d/%d' % (epoch, config.cnt_epoch))
+    tf.summary.experimental.set_step(epoch)
 
     model_train.train()
+    loss, loss_kl, loss_l2 = 0, 0, 0
     for data_before, data_after in enum_train_with_progress():
         z0 = np.random.normal(size = data_before.shape[0] * 3200).astype(np.float32).reshape((-1, 3200))
         with tf.GradientTape() as tape:
             mean, logstdev, outputs = model_train([data_before, data_after, z0])
-            loss_kl = kl_loss(mean, logstdev)
-            loss_l2 = l2_loss(outputs, data_after - data_before)
-            loss = config.kl_weight * loss_kl + loss_l2
-        with writer.as_default():
-            tf.summary.scalar('train_loss_kl', loss_kl)
-            tf.summary.scalar('train_loss_l2', loss_l2)
-            tf.summary.scalar('train_loss', loss)
-            writer.flush()
-        grad = tape.gradient(loss, model_train.trainable_weights)
+            loss_kl_t = kl_loss(mean, logstdev)
+            loss_l2_t = l2_loss(outputs, data_after - data_before)
+            loss_t = config.kl_weight * loss_kl + loss_l2
+        grad = tape.gradient(loss_t, model_train.trainable_weights)
         optimizer.apply_gradients(zip(grad, model_train.trainable_weights))
 
-        writer_step += 1
-        tf.summary.experimental.set_step(writer_step)
+        loss_kl += loss_kl_t * data_before.shape[0] / len_train
+        loss_l2 += loss_l2_t * data_before.shape[0] / len_train
+        loss += loss_t * data_before.shape[0] / len_train
+        
+    with writer.as_default():
+        tf.summary.scalar('train_loss_kl', loss_kl)
+        tf.summary.scalar('train_loss_l2', loss_l2)
+        tf.summary.scalar('train_loss', loss)
+        writer.flush()
 
     model_train.eval()
     loss, loss_kl, loss_l2 = 0, 0, 0
