@@ -16,7 +16,7 @@ class ResizeImages(Layer):
         pass
 
     def __repr__(self):
-        s = '{classname}(sz={sz})'.format(classname=self.__class__.__name__, **self.__dict__)
+        return '{classname}(sz={sz})'.format(classname=self.__class__.__name__, **self.__dict__)
     
     def forward(self, inputs):
         return tf.image.resize(inputs, [self.sz, self.sz])

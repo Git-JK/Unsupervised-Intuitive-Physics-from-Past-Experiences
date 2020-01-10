@@ -14,7 +14,7 @@ class CrossConv(Layer):
         pass
 
     def __repr__(self):
-        s = '{classname}()'.format(classname=self.__class__.__name__)
+        return '{classname}()'.format(classname=self.__class__.__name__)
     
     def forward(self, pack):
         inputs, kernels = pack

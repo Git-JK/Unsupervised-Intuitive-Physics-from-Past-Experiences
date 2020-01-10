@@ -16,7 +16,7 @@ class Split(Layer):
         pass
 
     def __repr__(self):
-        s = '{classname}(num_or_size_splits={number_or_size_splits}, axis={axis}, name={name})'.format(classname=self.__class__.__name__, **self.__dict__)
+        return '{classname}(num_or_size_splits={num_or_size_splits}, axis={axis}, name={name})'.format(classname=self.__class__.__name__, **self.__dict__)
     
     def forward(self, inputs):
         return tf.split(inputs, self.num_or_size_splits, self.axis)
