@@ -14,6 +14,6 @@ learning_rate = 0.001
 kl_weight = 0.005  # https://github.com/yzwxx/vae-celebA/blob/master/train_vae.py#L99
 
 log_every = 8
-save_snapshot_to = 'result/models'
-save_visualization_to = 'result/visualizations'
-save_logs_to = 'result/logs'
+save_snapshot_to = 'result/current/models'
+save_visualization_to = 'result/current/visualizations'
+save_logs_to = 'result/current/logs'
