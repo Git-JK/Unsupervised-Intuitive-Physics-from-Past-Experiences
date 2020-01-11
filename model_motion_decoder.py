@@ -7,7 +7,7 @@ input_sizes = [64, 32, 16, 8]
 
 def build_motion_decoder():
     ni = [Input((None, sz, sz, 32)) for sz in input_sizes]
-    scaled = [DeConv2d(32, (9, 9), (128 // sz, 128 // sz))(ni)
+    scaled = [DeConv2d(32, (9, 9), (128 // sz, 128 // sz))(x)
               for x, sz in zip(ni, input_sizes)]
     x = Concat(3)(scaled)
     nn = BatchNorm2d()(x)
