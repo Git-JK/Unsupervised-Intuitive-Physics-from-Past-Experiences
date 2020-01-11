@@ -29,11 +29,11 @@ def build():
     def build_train():
         im_before = Input((None, 128, 128, 3))
         im_after = Input((None, 128, 128, 3))
-        im = Concat(3)([im_before, im_after])
         z0 = Input((None, 3200))
+        im = Concat(3)([im_before, im_after])
         mean, log_var = motion_encoder(im)
-        # z <- mean + z0 * exp(log_var)
-        z = Lambda(lambda pack: pack[1] + pack[0] * tf.exp(pack[2]))([z0, mean, log_var])
+        # z <- mean + z0 * exp(log_var * 0.5)
+        z = Lambda(lambda pack: pack[1] + pack[0] * tf.exp(pack[2] * 0.5))([z0, mean, log_var])
         output = model_eval.as_layer()([im_before, z])
         return tl.models.Model(inputs = [im_before, im_after, z0],
                                outputs = [mean, log_var, output])
