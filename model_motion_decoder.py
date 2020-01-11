@@ -4,7 +4,7 @@ import tensorflow as tf
 from layer_resize_images import ResizeImages
 
 def build_motion_decoder():
-    ni = [Input((None, sz, sz, 32)) for sz in [64, 32, 16, 8]]
+    ni = [Input((None, sz, sz, 32)) for sz in [128, 64, 32, 16]]
     scaled = [ResizeImages(128)(x) for x in ni]
     x = Concat(3)(scaled)
     nn = Conv2d(128, (5, 5), (1, 1), tf.nn.leaky_relu)(x)
