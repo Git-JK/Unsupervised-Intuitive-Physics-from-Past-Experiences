@@ -7,7 +7,7 @@ def build_kernel_decoder():
     ni = Input((None, 3200))
     nn = Reshape((-1, 5, 5, 128))(ni)
     nn = Conv2d(128, (5, 5), (1, 1), tf.nn.leaky_relu)(nn)
-    nn = BatchNorm2d()(nn)
+    nn = BatchNorm2d(0.99)(nn)
     nn = Conv2d(128, (5, 5), (1, 1))(nn)
     nn = Split(4, 3)(nn)
     return tl.models.Model(inputs = ni, outputs = nn)

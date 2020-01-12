@@ -6,11 +6,11 @@ from layer_resize_images import ResizeImages
 def build_one_image_encoder(size):
     ni = Input((None, size, size, 3))
     nn = Conv2d(64, (5, 5), (2, 2), tf.nn.leaky_relu)(ni)
-    nn = BatchNorm2d()(nn)
+    nn = BatchNorm2d(0.99)(nn)
     nn = Conv2d(64, (5, 5), (1, 1), tf.nn.leaky_relu)(nn)
-    nn = BatchNorm2d()(nn)
+    nn = BatchNorm2d(0.99)(nn)
     nn = Conv2d(64, (5, 5), (2, 2), tf.nn.leaky_relu)(nn)
-    nn = BatchNorm2d()(nn)
+    nn = BatchNorm2d(0.99)(nn)
     nn = Conv2d(32, (5, 5), (1, 1))(nn)
     return tl.models.Model(inputs = ni, outputs = nn)
 
