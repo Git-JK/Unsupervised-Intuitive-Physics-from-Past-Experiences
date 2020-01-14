@@ -37,7 +37,7 @@ def read_progress():
 
 last_progress = read_progress()
 if last_progress > 0:
-    model_train.load_weights(os.path.join(config.save_snapshot_to, 'model_train_' + str(epoch + 1) + '.h5'))
+    model_train.load_weights(os.path.join(config.save_snapshot_to, 'model_train_' + str(last_progress) + '.h5'))
 
 writer = tf.summary.create_file_writer(config.save_logs_to)
 
