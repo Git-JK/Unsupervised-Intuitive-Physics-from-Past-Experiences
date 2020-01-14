@@ -7,15 +7,18 @@ Here are some preliminary results. The model is still busy training itself, and 
 
 ### Loss functions
 It's surprising that there are outliers in overall loss and KL divergence.
+
 | Train Loss | Test Loss | Train Loss (L2 only) |
 | ---------- | --------- | -------------------- |
 | ![](demo/attempt1/train_loss.png) | ![](demo/attempt1/test_loss.png) | ![](demo/attempt1/train_loss_l2_only.png) |
 
 ### Generations of image
 For each column, the first row is the original image, the last row is one of the possible next frames given in the test data, and the other 6 rows in the middle are randomly sampled from our model.
+
 | After Epoch 15 | After Epoch 31 | After Epoch 47 |
 | -------------- | -------------- | -------------- |
 | ![](demo/attempt1/15.png) | ![](demo/attempt1/31.png) | ![](demo/attempt1/47.png) |
+
 You can see that our model (at least) learned some patterns of movement for different shapes (eg. triangles move left-bottom to right-top, circles move up-down, squares move left-right).
 
 But till now, we can't generate next frame with **enough diversity**. We will increase the priority of KL divergence in the ensembled loss after Epoch 48.
