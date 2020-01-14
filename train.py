@@ -23,9 +23,25 @@ def kl_loss(mean, logstdev):
 tl.files.exists_or_mkdir(config.save_snapshot_to)
 tl.files.exists_or_mkdir(config.save_visualization_to)
 
+def read_progress():
+    last_progress = -1
+    for f in os.listdir(config.save_snapshot_to):
+        if f[:12] == 'model_train_' and f[-3] == '.h5':
+            last_progress = max(last_progress, int(f[12:-3]))
+    if last_progress == -1:
+        print('No snapshot found')
+        return 0
+    else:
+        inp = input('Found max snapshot id: ' + str(last_progress) + ', Enter where to start (0 ~ inf): ')
+        return int(inp)
+
+last_progress = read_progress()
+if last_progress > 0:
+    model_train.load_weights(os.path.join(config.save_snapshot_to, 'model_train_' + str(epoch + 1) + '.h5'))
+
 writer = tf.summary.create_file_writer(config.save_logs_to)
 
-for epoch in range(config.cnt_epoch):
+for epoch in range(last_progress, config.cnt_epoch):
     print('Epoch %d/%d' % (epoch, config.cnt_epoch))
     tf.summary.experimental.set_step(epoch)
 

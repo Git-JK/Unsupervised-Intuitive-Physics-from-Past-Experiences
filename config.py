@@ -11,7 +11,7 @@ data_visualize_list = 'data/shape/3Shapes2_large/visualize.txt'
 cnt_epoch = 128
 batch_size = 32
 learning_rate = 0.001
-kl_weight = 0.005  # https://github.com/yzwxx/vae-celebA/blob/master/train_vae.py#L99
+kl_weight = 0.05  # https://github.com/yzwxx/vae-celebA/blob/master/train_vae.py#L99
 
 log_every = 8
 save_snapshot_to = 'result/current/models'
