@@ -17,7 +17,7 @@ For each column, the first row is the original image, the last row is one of the
 
 | After Epoch 15 | After Epoch 31 | After Epoch 47 |
 | -------------- | -------------- | -------------- |
-| ![](demo/attempt1/15.png) | ![](demo/attempt1/31.png) | ![](demo/attempt1/47.png) |
+| ![](demo/attempt1/15.png) | ![](demo/attempt1/23.png) | ![](demo/attempt1/47.png) |
 
 You can see that our model (at least) learned some patterns of movement for different shapes (eg. triangles move left-bottom to right-top, circles move up-down, squares move left-right).
 
