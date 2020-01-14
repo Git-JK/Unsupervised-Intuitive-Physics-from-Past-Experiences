@@ -26,7 +26,7 @@ tl.files.exists_or_mkdir(config.save_visualization_to)
 def read_progress():
     last_progress = -1
     for f in os.listdir(config.save_snapshot_to):
-        if f[:12] == 'model_train_' and f[-3] == '.h5':
+        if f[:12] == 'model_train_' and f[-3:] == '.h5':
             last_progress = max(last_progress, int(f[12:-3]))
     if last_progress == -1:
         print('No snapshot found')
